@@ -1,5 +1,9 @@
-sqlalchemy 
-python-dotenv
-asyncpg 
-alembic 
+fastapi
+uvicorn
+sqlalchemy
+asyncpg
+alembic
 pydantic-settings
+python-jose
+passlib[bcrypt]
+python-multipart
