@@ -1,6 +1,8 @@
 """Pydantic v2 schemas for authentication request and response payloads."""
 
 import re
+import uuid
+from datetime import datetime
 from pydantic import BaseModel, EmailStr, Field, field_validator
 
 
@@ -74,3 +76,20 @@ class UserPublic(BaseModel):
     avatar_url: str | None = None
     is_active: bool
     is_email_verified: bool
+
+
+class UserResponse(BaseModel):
+    """Authenticated-user representation — excludes hashed_password entirely."""
+
+    model_config = {"from_attributes": True}
+
+    id: uuid.UUID
+    email: str
+    username: str
+    full_name: str | None = None
+    bio: str | None = None
+    avatar_url: str | None = None
+    is_active: bool
+    is_email_verified: bool
+    created_at: datetime
+    updated_at: datetime

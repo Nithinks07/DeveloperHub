@@ -6,6 +6,7 @@ POST /register  — create a new user account (rate-limited: 5/min per IP)
 POST /login     — exchange credentials for JWT tokens (rate-limited: 5/min per IP)
 POST /refresh   — obtain a new access token from a valid refresh token
 POST /logout    — stateless logout (client drops the token)
+GET  /users/me  — return the authenticated user's profile
 """
 
 from fastapi import APIRouter, Depends, HTTPException, Request, status
@@ -15,15 +16,18 @@ from slowapi.util import get_remote_address
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.auth.dependencies import get_current_active_user
 from app.auth.hashing import hash_password, verify_password
 from app.auth.jwt import create_access_token, create_refresh_token, decode_token
 from app.config.database import get_db
+from app.models.user import User
 from app.repositories.user import UserRepository
 from app.schemas.auth import (
     RefreshTokenRequest,
     TokenResponse,
     UserPublic,
     UserRegister,
+    UserResponse,
 )
 
 # ---------------------------------------------------------------------------
@@ -231,3 +235,19 @@ async def logout() -> None:
     """
     # Nothing to do on the server side for a stateless implementation.
     return None
+
+
+@router.get(
+    "/users/me",
+    response_model=UserResponse,
+    summary="Get the currently authenticated user",
+)
+async def read_current_user(
+    current_user: User = Depends(get_current_active_user),
+) -> User:
+    """Return the profile of the currently authenticated user.
+
+    Requires a valid ``Authorization: Bearer <access_token>`` header.
+    Serialised via ``UserResponse``, which intentionally omits ``hashed_password``.
+    """
+    return current_user
