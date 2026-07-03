@@ -1,5 +1,5 @@
 # DeveloperHub Phase 2–4 API Contract
-> **Version:** 1.1 — All fixes from pre-dispatch review applied.
+> **Version:** 1.2 — Schema confirmation + enum completeness pass.
 > All dates are ISO 8601 UTC. All IDs are UUID v4.
 
 ---
@@ -17,6 +17,8 @@
 | 7 | `DELETE /organizations/{id}` documented as hard cascade-delete (matches DB `ON DELETE CASCADE`) | Notes on Lane A |
 | 8 | Owner-removal guard rule added to `DELETE /organizations/{id}/members/{user_id}` | Lane A rule |
 | 9 | Added optional `comment` field to `POST /pull_requests/{pr_id}/reviews` | PR reviews table + Lane E schema |
+| — | Confirmed `milestones.status` column exists in model + migration (`open\|closed`) | No change needed |
+| — | Added Task `priority` row to enums table (reuses same values as Issue priority) | Contract only |
 
 ---
 
@@ -820,10 +822,11 @@ Always ISO 8601 UTC (e.g. `2026-07-03T12:00:00Z`).
 
 | Field | Values |
 |---|---|
-| Issue `priority` | `low`, `medium`, `high`, `critical` |
+| Task/Issue `priority` | `low`, `medium`, `high`, `critical` (shared enum — same values for both entities) |
 | Issue `type` | `bug`, `feature`, `task`, `enhancement`, `research`, `documentation` |
 | Member `role` | `owner`, `admin`, `maintainer`, `developer`, `guest` |
 | PR review `status` | `pending`, `approved`, `changes_requested`, `commented` |
+| Milestone `status` | `open`, `closed` |
 
 ---
 

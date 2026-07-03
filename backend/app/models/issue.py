@@ -108,13 +108,11 @@ class Issue(Base):
 
     assignee = relationship(
         "User",
-        back_populates="assigned_issues",
         foreign_keys=[assigned_to],
     )
 
     creator = relationship(
         "User",
-        back_populates="created_issues",
         foreign_keys=[created_by],
     )
 

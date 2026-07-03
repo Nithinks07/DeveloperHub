@@ -106,7 +106,6 @@ class PullRequest(Base):
 
     author = relationship(
         "User",
-        back_populates="pull_requests_created",
         foreign_keys=[author_id],
     )
 

@@ -6,8 +6,21 @@ from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.models.base import Base
+from sqlalchemy import Table, Column, Integer
 
+task_labels = Table(
+    "task_labels",
+    Base.metadata,
+    Column("task_id", UUID(as_uuid=True), ForeignKey("tasks.id", ondelete="CASCADE"), primary_key=True),
+    Column("label_id", UUID(as_uuid=True), ForeignKey("labels.id", ondelete="CASCADE"), primary_key=True),
+)
 
+issue_labels = Table(
+    "issue_labels",
+    Base.metadata,
+    Column("issue_id", UUID(as_uuid=True), ForeignKey("issues.id", ondelete="CASCADE"), primary_key=True),
+    Column("label_id", UUID(as_uuid=True), ForeignKey("labels.id", ondelete="CASCADE"), primary_key=True),
+)
 class Label(Base):
     __tablename__ = "labels"
 
