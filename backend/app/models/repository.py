@@ -66,3 +66,21 @@ class Repository(Base):
         "User",
         back_populates="repositories",
     )
+
+    projects = relationship(
+        "Project",
+        back_populates="repository",
+        cascade="all, delete",
+    )
+
+    issues = relationship(
+        "Issue",
+        back_populates="repository",
+        cascade="all, delete",
+    )
+
+    pull_requests = relationship(
+        "PullRequest",
+        back_populates="repository",
+        cascade="all, delete",
+    )
