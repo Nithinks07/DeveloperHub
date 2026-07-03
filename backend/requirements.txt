@@ -3,7 +3,9 @@ uvicorn
 sqlalchemy
 asyncpg
 alembic
+pydantic[email]
 pydantic-settings
 python-jose
 passlib[bcrypt]
 python-multipart
+slowapi

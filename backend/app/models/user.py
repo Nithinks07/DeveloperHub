@@ -51,11 +51,13 @@ class User(Base):
 
     created_at = mapped_column(
         DateTime(timezone=True),
+        nullable=False,
         server_default=func.now(),
     )
 
     updated_at = mapped_column(
         DateTime(timezone=True),
+        nullable=False,
         server_default=func.now(),
         onupdate=func.now(),
     )

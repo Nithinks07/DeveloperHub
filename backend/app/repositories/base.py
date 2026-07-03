@@ -2,6 +2,7 @@ from typing import Generic, TypeVar
 from uuid import UUID
 
 from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config.database import Base
@@ -17,8 +18,12 @@ class BaseRepository(Generic[ModelType]):
     async def create(self, obj_in: dict) -> ModelType:
         db_obj = self.model(**obj_in)
         self.db.add(db_obj)
-        await self.db.commit()
-        await self.db.refresh(db_obj)
+        try:
+            await self.db.commit()
+            await self.db.refresh(db_obj)
+        except IntegrityError:
+            await self.db.rollback()
+            raise
         return db_obj
 
     async def get_by_id(self, id: UUID) -> ModelType | None:
